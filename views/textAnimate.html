@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textillate.js</title>
+<link href="../static/css/animate.css" rel="stylesheet">
+<!-- <link href="../static/css/textAminate.css" rel="stylesheet"> -->
+
+<body>
+                <h2>Playground</h2>
+                        <div class="tlt">
+                            <ul class="texts" style="display: none">
+                      <li>Grumpy wizards make toxic brew for the evil Queen and Jack.</li>
+                      <li>The quick brown fox jumps over the lazy dog.</li>
+                      <li>在读bootstrap.js源码时发现有很多地方用到$.Event（），但不太清楚具体的用法，请指点</li>
+                    </ul>
+                            <!-- 在读bootstrap.js源码时发现有很多地方用到$.Event（），但不太清楚具体的用法，请指点 在读bootstrap.js源码时发现有很多地方用到$.Event（），但不太清楚具体的用法，请指点 -->
+                        </div>
+
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- <script src="../static/js/jquery.fittext.js"></script> -->
+    <script src="../static/js/jquery.lettering.js"></script>
+    <!-- <script src="../static/js/highlight.min.js"></script> -->
+    <script src="../static/js/jquery.textillate.js"></script>
+    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+    <script>
+        // 源链接 http://www.yyyweb.com/demo/textillate/
+        $(function () {
+
+            var animateClasses = 'flash bounce shake tada swing wobble pulse flip flipInX flipOutX flipInY flipOutY fadeIn fadeInUp fadeInDown fadeInLeft fadeInRight fadeInUpBig fadeInDownBig fadeInLeftBig fadeInRightBig fadeOut fadeOutUp fadeOutDown fadeOutLeft fadeOutRight fadeOutUpBig fadeOutDownBig fadeOutLeftBig fadeOutRightBig bounceIn bounceInDown bounceInUp bounceInLeft bounceInRight bounceOut bounceOutDown bounceOutUp bounceOutLeft bounceOutRight rotateIn rotateInDownLeft rotateInDownRight rotateInUpLeft rotateInUpRight rotateOut rotateOutDownLeft rotateOutDownRight rotateOutUpLeft rotateOutUpRight hinge rollIn rollOut';
+
+            var $tlt = $('.tlt');
+            /*
+                shuffle 随机化字符序列（注意shuffle在sync = true时没有意义）
+                reverse 反转字符序列（注意shuffle在sync = true时没有意义）
+                sync 设置为true以同时动画所有的字符
+                $element.textillate('start') - 手动启动/重新启动textillate
+                $element.textillate('stop') - 手动暂停/停止纺织
+                $element.textillate('in') - 在动画中触发当前文本
+                $element.textillate('out') - 触发当前文本的动画
+            */
+            var objMy = {
+                loop: false,
+                in: {
+                    effect: 'fadeInLeftBig',
+                    shuffle: false,
+                    reverse: false,
+                    sync: false
+                },
+                out:{
+                    effect: "flash",
+                    sequence: true
+                }
+            }
+            $tlt.textillate(objMy);
+        });
+
+    </script>
+</body>
+
+</html>

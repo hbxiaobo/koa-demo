@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>jQuery手势密码特效 - 站长素材</title>
+    <style>
+            .shandow{
+        border: 10px dashed #beceeb; filter: drop-shadow(5px 5px 10px black);
+    }
+    .tu{
+    animation: ss 2s 1 forwards;
+    }
+    @keyframes ss {
+      0% {
+        filter: blur(5px) brightness(100%);
+	    opacity: 1;
+      }
+      100% {
+        filter: blur(5px) brightness(10%);
+	    opacity: 1;
+      }
+    }
+    .box {
+    margin: 40px; padding: 50px;
+    background-color: #fff;
+    position: relative;
+    font-size: 24px;
+}
+.cor {
+    position: absolute;
+    left: -40px;
+    width: 0; height: 0;
+    overflow: hidden;
+    border: 20px solid transparent;
+    border-right-color: #fff;
+}
+.box-shadow {
+    box-shadow: 5px 5px 10px black;
+}
+.drop-shadow {
+    filter: drop-shadow(5px 5px 10px black);
+}
+
+			.opeField{
+				position : relative ;
+				width : 100% ;
+				height : 100% ;
+			}
+
+			.targets{
+				position : absolute ;
+				width : 100px ;
+				height : 100px ;
+				bottom : 0 ;
+
+				margin: auto;  
+				left : 0 ;
+				right : 0 ;
+				
+				
+			}
+			.target{
+				position : absolute ;
+				width : 100%;
+				height : 100% ;
+				top : 0;
+				
+				margin:30px auto;
+    /* How pronounced should the 3D effects be */
+    perspective: 500;
+    -webkit-perspective: 500;
+    -moz-perspective: 500;
+    -ms-perspective: 500;
+    -o-perspective: 500;
+  
+    border-radius:6px;
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px;
+    -ms-border-radius:6px;
+    -o-border-radius:6px;
+    
+    cursor:pointer;
+			}
+
+			#target1{
+				z-index :1 ;
+			}
+			#target2{
+				z-index : 2 ;
+			}
+			#target3{
+				z-index :3 ;
+			}
+			#target4{
+				z-index :4 ;
+			}
+			#target5{
+				z-index :5 ;
+			}
+			#target6{
+				z-index : 6;
+			}
+			#target7{
+				z-index : 7 ;
+			}
+			#target8{
+				z-index :8 ;
+			}
+			#target9{
+				z-index: 9  ;
+			}
+
+			.box-front,.box-back{
+ 		/* Enable 3D transforms */
+		transform-style: preserve-3d;
+		-webkit-transform-style: preserve-3d;
+		-moz-transform-style: preserve-3d;
+		-ms-transform-style: preserve-3d;
+		-o-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+    transform-origin: center center ;
+    -webkit-transform-origin : center center ; 
+    -moz-transform-origin : center center ;
+		 backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		-ms-backface-visibility: hidden;
+		-o-backface-visibility: hidden;
+		 width:100%;
+		height:100%;
+		position:absolute;
+		background-color:#0090d9;
+ 		/* Animate the transitions */
+		-webkit-transition:0.8s; text-align:center;
+		-moz-transition:0.8s; text-align:center;
+		-ms-transition:0.8s; text-align:center;
+		-o-transition:0.8s; text-align:center;
+		transition:0.8s; text-align:center;
+		color:#FFF;
+		border-radius:6px;
+		-webkit-border-radius:6px;
+		-moz-border-radius:6px;
+		-ms-border-radius:6px;
+		-o-border-radius:6px;
+		}
+
+.box-back{
+ 		/* The back side is flipped 180 deg by default */
+		transform:rotateY(180deg);
+		-webkit-transform:rotateY(180deg);
+		-moz-transform:rotateY(180deg);
+		-ms-transform:rotateY(180deg);
+		-o-transform:rotateY(180deg);
+		background-color:#f35958;
+ 
+		}
+
+ .target:hover .box-front{
+		/* When the container is hovered, flip the front side and hide it .. */
+		transform:rotateY(180deg);
+		-webkit-transform:rotateY(180deg);
+		-moz-transform:rotateY(180deg);
+		-ms-transform:rotateY(180deg);
+		-o-transform:rotateY(180deg);
+		}
+
+.target:hover .box-back{
+		/* .. at the same time flip the back side into visibility */
+		transform:rotateY(360deg);
+		-webkit-transform:rotateY(360deg);
+		-moz-transform:rotateY(360deg);
+		-ms-transform:rotateY(180deg);
+		-o-transform:rotateY(180deg);
+		}
+
+			.target > .box-front > p, .target > .box-back > p{
+				font-size: 16px; 
+				text-align: center ;
+				color : black ;
+				line-height: 100px ;
+            }
+            .square{
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                width: 360px;
+                height: 360px;
+                background-color: #f35958;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="box drop-shadow">
+        <i class="cor"></i>
+        filter: drop-shadow
+    </div>
+        <div class="shadow"></div>
+        <img style="width: 300px" class="tu" src="../static/images/4.jpg" alt="">
+    <center>
+        <br>
+        <br> 正确的密码是一个字母“Z”的形状哦！
+        <br>
+        <br>
+        <br>
+        <div id="gesturepwd"></div>
+    </center>
+    <div id="capture" style="padding: 10px; background: #f5da55">
+        <h4 style="color: #000; ">Hello world!</h4>
+    </div>
+            <div class="opeField">
+                <div class="targets">
+                    <div class="target" id="target1">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target2">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target3">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target4">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target5">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target6">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target7">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target8">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                    <div class="target" id="target9">
+                        <div class="box-front">
+                            <p>cards</p>
+                        </div>
+                        <div class="box-back">
+                            <p>surprise</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="square"></div>
+    <script src="../static/js/jquery-1.8.0.js"></script>
+    <script src="../static/js/jquery.gesture.password.js"></script>
+    <script src="../static/js/html2canvas.js"></script>
+    <!--<script src="../dist/js/danmuplayer.min.js"></script>-->
+    <script src="../static/js/Tween.js"></script>
+    <script src="../static/js/tweenjs.js"></script>
+    <script src="../static/js/easeljs-0.8.2.min.js"></script>
+    <script src="../static/js/RequestAnimationFrame.js"></script>
+    <script>
+        var target = document.querySelector('.square');
+        target.alpha = 1;
+        createjs.Tween.get(target)
+            .wait(500)
+            .to({ alpha: 0, visible: true }, 1000)
+            .call(handleComplete);
+        function handleComplete() {
+            console.log(13);
+        }
+         
+        var tween, tweenBack;
+        var tweens = new Array(9);
+        var position = { x: 0, y: 0, rotation: 0 };
+        var targets = function () {
+            var tmp = new Array(9);
+            for (var j = 0; j < tmp.length; j++) {
+                tmp[j] = document.getElementById('target' + (j + 1));
+            }
+            return tmp;
+        }();
+        console.log(targets);
+        function createTweens() {
+
+            var myW = targets[1].offsetWidth;
+            var myH = targets[1].offsetHeight;
+            for (var i = tweens.length - 1; i >= 0; i--) {
+
+                var tween = new TWEEN.Tween(position)
+                    .to({ x: ((i % 3) * 1.2 - 1.2) * myW, y: 0 - (parseInt(i / 3) + 1) * myH - 10 * parseInt(i / 3), rotation: 359 }, 200)
+                    .delay(0)
+                    //.easing(TWEEN.Easing.Cubic.In)
+                    .onUpdate(function (i) {
+                        var j = i;
+                        return function () {
+                            targets[j].style.webkitTransform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+                        }
+
+                    }(i))
+                    .onComplete(function () {
+                        position.x = 0;
+                        position.y = 0;
+                        console.log(position);
+                    });
+                tweens[i] = tween;
+            }
+        }
+        init();
+        animate();
+        function init() {
+
+            createTweens();
+            for (var i = tweens.length - 1; i > 0; i--) {
+                tweens[i].chain(tweens[i - 1]);
+            }
+
+
+            tweens[tweens.length - 1].start();
+
+        }
+
+        function animate(time) {
+
+            requestAnimationFrame(animate);
+
+            TWEEN.update(time);
+
+        }
+
+        function update() {
+            // .style.webkitTransform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+            //target.style.left = position.x + 'px';
+            //target.style.top = position.y + 'px';
+            //target.style.webkitTransform = 'rotate(' + Math.floor(position.rotation) + 'deg)';
+            //target.style.MozTransform = 'rotate(' + Math.floor(position.rotation) + 'deg)';
+
+        }
+    </script>
+    <script>
+        setTimeout(() => {
+            html2canvas(document.querySelector("center")).then(canvas => {
+                document.body.appendChild(canvas)
+            });
+        }, 1000);
+        
+        // Create a new jQuery.Event object with specified event properties.
+            var e = jQuery.Event("keydown", { keyCode: 64 });
+
+            // trigger an artificial keydown event with keyCode 64
+            jQuery("body").trigger(e);
+        $("#gesturepwd").GesturePasswd({
+            backgroundColor: "#252736",  //背景色
+            color: "#FFFFFF",   //主要的控件颜色
+            roundRadii: 25,    //大圆点的半径
+            pointRadii: 6, //大圆点被选中时显示的圆心的半径
+            space: 30,  //大圆点之间的间隙
+            width: 240,   //整个组件的宽度
+            height: 240,  //整个组件的高度
+            lineColor: "#f5f80f",   //用户划出线条的颜色
+            zindex: 100  //整个组件的css z-index属性
+        });
+        $("#gesturepwd").on("hasPasswd", function (e, passwd) {
+            var result;
+
+            if (passwd == "1235789") {
+
+                result = true;
+            }
+            else {
+                result = false;
+            }
+
+
+
+            if (result == true) {
+                $("#gesturepwd").trigger("passwdRight");
+                setTimeout(function () {
+
+                    //密码验证正确后的其他操作，打开新的页面等。。。
+                    alert("密码正确！")
+                }, 500);  //延迟半秒以照顾视觉效果
+            }
+            else {
+                $("#gesturepwd").trigger("passwdWrong");
+
+                //密码验证错误后的其他操作。。。
+
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

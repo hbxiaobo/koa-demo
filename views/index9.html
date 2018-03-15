@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>threeJsDemo</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        canvas{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src="../kongming/js/zepto.min.js"></script>
+    <script type="text/javascript" src="../kongming/js/three.min.js"></script>
+    <script type="text/javascript" src="../static/js/DeviceOrientationControls.js"></script>
+    <script>
+        function initDevices() {
+                deviceControl = new THREE.DeviceOrientationControls(camera);
+            }
+        //threejs中文文档 http://techbrood.com/threejs/docs/
+
+        //threeJs三要素：场景 相机 渲染器
+        //场景
+        // var scene = new THREE.Scene();
+        // // 相机的一种类型 
+        // // 参数一：视野即在显示器上看到的场景范围，以度为单位
+        // // 参数二：宽高比，一般是用元素的宽度除以高度
+        // // 参数三和四：近端和远端剪切平面
+        // var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,500);
+        // // 渲染器的一种类型
+        // var renderer = new THREE.WebGLRenderer();
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // document.body.appendChild(renderer.domElement);
+        // // 创建一个多维数据集，包含多维数据集的所有点（顶点）和填充面的对象
+        // var geometry = new THREE.BoxGeometry(1, 1, 1);
+        // // 使用材质着色
+        // var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        // // 网格对象，便于插入到我们的场景中
+        // var cube = new THREE.Mesh(geometry, material);
+        // scene.add(cube);
+        // camera.position.z = 5;
+
+        // function animate(params) {
+        //     requestAnimationFrame(animate);
+        //     cube.rotation.x += 0.1;
+        //     cube.rotation.y += 0.1;
+        //     renderer.render(scene, camera);
+        // }
+        // animate();
+        var skyTexture = ['../kongming/td/bg2_o_1.jpg?1', '../kongming/td/bg2_o_3.jpg?1', '../kongming/td/bg2_o_4.jpg?1', '../kongming/td/bg2_o_5.jpg?1', '../kongming/td/bg2_o_0.jpg?1', '../kongming/td/bg2_o_2.jpg?1'];
+        var target = {
+            x: 0,
+            y: 0,
+            z: 0,
+            lon: 0,
+            lat: 0,
+            phi: 0,
+            theta: 0,
+            fov: 60
+        };
+        var mouse;
+    	var disMin = 13;
+    	var stageW = window.innerWidth;
+        var stageH = window.innerHeight;
+    	var dots = [];
+        var dotMax = 8;
+        var dotMax2 = 60;
+        var renderer;
+
+        var camera;
+        var scene;
+        function loadSky() {
+            var materials = [];
+            $.each(skyTexture,
+                function (index, obj) {
+                    var texture = new THREE.Texture();
+                    var loader = new THREE.ImageLoader();
+                    loader.load(obj,
+                        function (image) {
+                            texture.image = image;
+                            texture.needsUpdate = true
+                        });
+                    materials[index] = new THREE.MeshBasicMaterial({
+                        map: texture,
+                        overdraw: 0.5
+                    })
+                });
+            var mesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000, 2, 2, 2), new THREE.MeshFaceMaterial(materials));
+            mesh.scale.x = -1;
+            scene.add(mesh);
+        }
+        function initDot() {
+            var sprite = THREE.ImageUtils.loadTexture("../kongming/td/dot.png?1");
+            for (var i = 0; i < dotMax; i++) {
+                var geometry = new THREE.Geometry();
+                for (var j = 0; j < dotMax2; j++) {
+                    var vertex = new THREE.Vector3();
+                    vertex.x = Math.random() * 1000 - 500;
+                    vertex.y = Math.random() * 1000 - 500;
+                    vertex.z = Math.random() * 1000 - 500;
+                    geometry.vertices.push(vertex)
+                }
+                var materials = new THREE.PointCloudMaterial({
+                    size: i + 3,
+                    map: sprite,
+                    blending: THREE.AdditiveBlending,
+                    depthTest: false,
+                    transparent: true
+                });
+                var particles = new THREE.PointCloud(geometry, materials);
+                particles.v = {};
+                particles.v.rx = (Math.random() - 0.5) * 0.001;
+                particles.v.rz = (Math.random() - 0.5) * 0.001;
+                particles.v.r = Math.random();
+                particles.v.a = (Math.random() - 0.5) * 0.1;
+                dots.push(particles);
+                scene.add(particles)
+            }
+        }
+        function renderDot() {
+            for (var i = 0; i < dotMax; i++) {
+                var particles = dots[i];
+                particles.v.r += particles.v.a;
+                particles.rotation.x += particles.v.rx;
+                particles.rotation.z += particles.v.rz;
+                particles.material.opacity = Math.sin(particles.v.r) * 0.4 + 0.7
+            }
+        }
+        function render() {
+            target.lat = Math.max(-55, Math.min(25, target.lat));
+            target.phi = THREE.Math.degToRad(90 - target.lat);
+            target.theta = THREE.Math.degToRad(target.lon);
+                var _x = camera.d * Math.sin(target.phi) * Math.cos(target.theta);
+                var _y = camera.d * Math.cos(target.phi);
+                var _z = camera.d * Math.sin(target.phi) * Math.sin(target.theta);
+                camera.position.x += (_x - camera.position.x) * 0.1;
+                camera.position.y += (_y - camera.position.y) * 0.1;
+                camera.position.z += (_z - camera.position.z) * 0.1;
+                target.x += (scene.position.x - target.x) * 0.1;
+                target.y += (scene.position.y - target.y) * 0.1;
+                target.z += (scene.position.z - target.z) * 0.1;
+                camera.lookAt(target);
+                            // deviceControl.update();
+            renderer.render(scene, camera)
+        }
+        function playOn(params) {
+            requestAnimationFrame(playOn);
+            renderDot();
+            render();
+        }
+        function init(params) {
+            // camera = new THREE.OrthographicCamera(stageW / - 2, stageW / 2, stageH / 2, stageH / - 2, 1, 1000);
+            camera = new THREE.PerspectiveCamera(target.fov, stageW / stageH, 1, 1000);
+            camera.d = disMin;
+            scene = new THREE.Scene();
+            // raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            // var ambient = new THREE.AmbientLight(0xffffff);
+            // scene.add(ambient);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(stageW, stageH);
+            loadSky();
+            // loadLight();
+            initDot();
+            var container = document.getElementById('container');
+            container.appendChild(renderer.domElement);
+            initControl();
+            initDevices();
+            // initDevice();
+            playOn()          
+        }
+        function initControl() {
+            $('canvas').on('touchstart', onDocumentTouchStart);
+        }
+        function onDocumentTouchStart(event) {
+            isDown = true;
+            event = event.touches[0];
+            actionStart(event.clientX, event.clientY);
+            $(document).on('touchmove', onDocumentTouchMove);
+            $(document).on('touchend', onDocumentTouchEnd);
+            return false
+        }
+        function onDocumentTouchMove(event) {
+            event = event.touches[0];
+            actionMove(event.clientX, event.clientY);
+            return false
+        }
+        function actionStart(x, y) {
+            onDownPointerX = x;
+            onDownPointerY = y;
+            onDownLon = target.lon;
+            onDownLat = target.lat;
+            mouse.x = (x / stageW) * 2 - 1;
+            mouse.y = -(y / stageH) * 2 + 1;
+            // checkSelect()
+        }
+        function onDocumentTouchEnd() {
+            isDown = false;
+            $(document).off('touchmove', onDocumentTouchMove);
+            $(document).off('touchend', onDocumentTouchEnd);
+            return false
+        }
+        function actionMove(x, y) {
+            target.lon = (x - onDownPointerX) * 0.5 + onDownLon;
+            target.lat = (y - onDownPointerY) * 0.5 + onDownLat
+        }
+        init();
+    </script>
+</body>
+</html>

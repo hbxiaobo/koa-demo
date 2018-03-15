@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>大王叫我来巡山</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="apple-touch-fullscreen" content="YES">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta http-equiv="x-rim-auto-match" content="none">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/icon.png">
+    <link rel="stylesheet" type="text/css" href="../static/css/canvasLongstyle.css">
+    <style>
+        .indexPage{
+            display: block;
+        }
+        .handleBtn{
+            display: none;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 60%;
+            left: 20%;
+            background: url(../static/images/1234.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .shareBtn{
+            width: 100px;
+            height: 100px;
+            background: url(../static/images/5.jpg) no-repeat;
+                transform: translateX(-400%);
+        }
+        .show{
+                transform: translateX(0);
+                transition: .5s cubic-bezier(.24,1.27,.57,1) 0s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page indexPage">
+        <canvas id="canvas" width="400" height="300"></canvas>
+        <div class="handleBtn"></div>
+        <div class="loadBtn"></div>
+        <div class="shareBtn"></div>
+    </div>
+    <div class="page sharePage">
+        <div class="J_sharePic sharePic"></div>
+    </div>
+    <!-- <script type="text/javascript" src="../static/js/howler.min.js"></script>
+    <script type="text/javascript" src="../static/js/game.js"></script> -->
+    <script>
+        var bgImg = new Image(),
+        maxPosY = 21075,
+        moveSpeed = 0,
+        posY = 0,
+        winWidth = window.innerWidth,
+        winHeight = window.innerHeight,
+        c = document.querySelector('#canvas'),
+        ctx = c.getContext('2d');
+        c.width = 640;
+        c.height = Math.floor(640 * winHeight / winWidth);
+            
+        var car = new Image(),x=0;
+        car.src = '../static/images/car.png';
+        function drawCar(params) {
+            x+=6;
+            if(x >= c.height)x=0;
+            ctx.drawImage(car, 10,x);
+            requestAnimationFrame(drawCar);
+        }
+        bgImg.onload = function (params) {
+            drwaBg(); drawCar();
+        }
+        bgImg.src = '../static/images/bg.jpg';
+        function drwaBg(params) {
+            ctx.clearRect(0, 0, c.width, c.height);
+            posY += moveSpeed;
+            if (moveSpeed >= 0) {
+                moveSpeed -= 0.5;
+            } else {
+                moveSpeed += 0.5;
+            }
+            if (Math.abs(moveSpeed) <= 0.5) {
+                moveSpeed = 0;
+            }
+            if (posY >= 0) {
+                posY = 0;
+            }
+            if(posY < -1000)document.querySelector('.handleBtn').style.display = 'block';
+            if (posY <= c.height - maxPosY) {
+                posY = c.height - maxPosY;
+            }
+            ctx.drawImage(bgImg, 0, posY);
+            requestAnimationFrame(drwaBg);
+        }
+        document.querySelector('.handleBtn').addEventListener('click', function(params) {
+            this.style.display = 'none';
+            document.querySelector('.shareBtn').classList.add('show');
+        })
+        var indexPage = document.querySelector('.indexPage');
+            var oldY = 0, newY = 0, touchMoveY = 0;
+            var touchStart = 0, newTouchTime = 0, touchTime = 0;
+            indexPage.addEventListener('touchstart', function (e) {
+                    touchStart = Date.now();
+                    touchMoveY = 0;
+                    moveSpeed = 0;
+                    oldY = e.touches[0].clientY;
+            });
+            indexPage.addEventListener('touchmove', function (e) {
+                    newY = e.touches[0].clientY;
+                    var diffY = Math.floor(newY - oldY);
+                    if (Math.abs(diffY) >= 113) {
+                        diffY = 0;
+                    }
+                    touchMoveY += diffY;
+                    oldY = newY;
+                    posY += diffY;
+            });
+            indexPage.addEventListener('touchend', function () {
+                    newTouchTime = Date.now();
+                    touchTime = newTouchTime - touchStart;
+                    if (touchTime <= 800) {
+                        moveSpeed = Math.floor(touchMoveY * 16 / touchTime);
+                    } else {
+                        moveSpeed = 0;
+                    }
+                    touchMoveY = 0;
+            });
+    </script>
+</body>
+
+</html>
